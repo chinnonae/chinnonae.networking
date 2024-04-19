@@ -1,0 +1,16 @@
+---
+- name: Copy source network device
+  ansible.builtin.template:
+    src: network.j2
+    dest: /etc/systemd/network/10-{{ device_name }}.network
+    mode: '0644'
+  vars:
+    device_name: "{{ interface.device_name }}"
+    vlans: "{{ interface.vlans }}"
+    ip: "{{ interface.ip }}"
+
+- name: Setup vlan network devices
+  ansible.builtin.include_tasks: config/vlan.yml
+  loop: "{{ interface.vlans | default([]) }}"
+  loop_control:
+    loop_var: vlan

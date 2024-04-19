@@ -1,0 +1,7 @@
+---
+networkd_interfaces: []
+  # - device_name: ens18
+  #   ip: ""
+  #   vlans:
+  #     - id: 33
+  #       ip: ""

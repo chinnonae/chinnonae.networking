@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+[Match]
+Name={{ device_name }}
+
+[Network]
+{% if ip is defined %}
+Address={{ ip }}
+{% endif %}
+{% if vlans is defined %}
+{% for vlan in vlans %}
+VLAN={{ device_name }}.{{ vlan.id }}
+{% endfor %}
+{% endif %}

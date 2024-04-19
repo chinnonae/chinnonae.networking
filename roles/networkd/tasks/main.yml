@@ -1,0 +1,12 @@
+---
+- name: Ensure cloud-init networking is disabled
+  ansible.builtin.template:
+    src: 99-disable-network-config.cfg.j2
+    dest: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+    mode: '0644'
+
+- name: Configure networkd interfaces
+  ansible.builtin.include_tasks: config.yml
+  loop: "{{ networkd_interfaces }}"
+  loop_control:
+    loop_var: interface
