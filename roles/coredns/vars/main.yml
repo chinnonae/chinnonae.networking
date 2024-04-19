@@ -8,4 +8,3 @@ coredns_go_arch_map:
 
 coredns_go_arch: "{{ coredns_go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
 coredns_download_filename: coredns_{{ coredns_version }}_linux_{{ coredns_go_arch }}
-

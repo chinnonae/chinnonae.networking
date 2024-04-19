@@ -9,6 +9,7 @@
 
 - name: Clone CoreDNS config from git repository
   when: coredns_config_repository is defined
+  notify: Restart coredns
   block:
     - name: Ensure git is installed
       ansible.builtin.apt:
@@ -41,4 +42,3 @@
         path: /etc/coredns
         state: link
         src: /opt/coredns-config/coredns
-  notify: Restart coredns
