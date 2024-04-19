@@ -1,0 +1,44 @@
+---
+- name: Copy default CoreDNS config
+  ansible.builtin.template:
+    src: corefile.j2
+    dest: /etc/coredns/Corefile
+    mode: '0644'
+  when: coredns_config_repository is not defined
+  notify: Restart coredns
+
+- name: Clone CoreDNS config from git repository
+  when: coredns_config_repository is defined
+  block:
+    - name: Ensure git is installed
+      ansible.builtin.apt:
+        name: git
+        state: present
+    - name: Copy key
+      ansible.builtin.copy:
+        dest: ~/.ssh/coredns
+        content: "{{ coredns_repository_key }}"
+        mode: '0600'
+    - name: Clone repository
+      ansible.builtin.git:
+        repo: "{{ coredns_config_repository }}"
+        dest: /opt/coredns-config
+        key_file: ~/.ssh/coredns
+        update: true
+        version: main
+        accept_hostkey: true
+    - name: Check if coredns directory exists
+      ansible.builtin.stat:
+        path: /etc/coredns
+      register: etc_coredns
+    - name: Delete coredns directory
+      ansible.builtin.file:
+        path: /etc/coredns
+        state: absent
+      when: etc_coredns.stat.isdir
+    - name: Symlink config from repository
+      ansible.builtin.file:
+        path: /etc/coredns
+        state: link
+        src: /opt/coredns-config/coredns
+  notify: Restart coredns

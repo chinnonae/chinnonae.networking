@@ -1,0 +1,19 @@
+---
+- name: Ensure systemd-resolved is disabled
+  ansible.builtin.systemd_service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+
+- name: Replace managed resolv.conf
+  block:
+    - name: Check if resolv.conf managed by systemd-resolved
+      ansible.builtin.stat:
+        path: /etc/resolv.conf
+      register: resolvconf
+    - name: Replace resolv.conf
+      ansible.builtin.template:
+        src: resolv.conf.j2
+        dest: /etc/resolv.conf
+        mode: '0644'
+      when: resolvconf.stat.islnk and resolvconf.stat.lnk_target == "/run/systemd/resolve/resolv.conf"

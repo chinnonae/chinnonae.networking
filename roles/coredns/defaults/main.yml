@@ -1,0 +1,10 @@
+---
+# defaults file for coredns
+
+coredns_version: 1.11.1
+coredns_resolvconf_nameserver: '127.0.0.1'
+coredns_default_upstream: '1.1.1.1'
+coredns_system_group: "coredns"
+coredns_system_user: "{{ coredns_system_group }}"
+
+# coredns_config_repository: ssh://git@github.com/username/repo.git

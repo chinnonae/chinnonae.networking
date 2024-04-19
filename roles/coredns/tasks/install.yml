@@ -1,0 +1,77 @@
+---
+- name: Create the coredns group
+  ansible.builtin.group:
+    name: "{{ coredns_system_group }}"
+    state: present
+    system: true
+
+- name: Create the coredns user
+  ansible.builtin.user:
+    name: "{{ coredns_system_user }}"
+    groups: "{{ coredns_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    createhome: false
+    home: /
+
+- name: Create coredns configuration directories
+  ansible.builtin.file:
+    path: "/etc/coredns"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Download and install CoreDNS binary
+  block:
+    - name: Download coredns binary to local folder
+      become: false
+      ansible.builtin.get_url:
+        url: "https://github.com/coredns/coredns/releases/download/v{{ coredns_version }}/{{ coredns_download_filename }}.tgz"
+        dest: "/tmp/{{ coredns_download_filename }}.tgz"
+        checksum: "sha256:{{ coredns_checksum }}"
+        mode: '0644'
+      register: _download_binary
+      until: _download_binary is succeeded
+      retries: 5
+      delay: 2
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Create unpack dir
+      become: false
+      ansible.builtin.file:
+        path: "/tmp/{{ coredns_download_filename }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Unpack coredns binary
+      become: false
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ coredns_download_filename }}.tgz"
+        dest: "/tmp/{{ coredns_download_filename }}"
+        creates: "/tmp/{{ coredns_download_filename }}/coredns"
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Propagate coredns binaries
+      ansible.builtin.copy:
+        src: "/tmp/{{ coredns_download_filename }}/coredns"
+        dest: "/usr/local/bin/coredns"
+        mode: '0750'
+        owner: "{{ coredns_system_user }}"
+        group: "{{ coredns_system_group }}"
+      notify: Restart coredns
+      when: not ansible_check_mode
+
+- name: Copy the coredns systemd service file
+  ansible.builtin.template:
+    src: coredns.service.j2
+    dest: /etc/systemd/system/coredns.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart coredns

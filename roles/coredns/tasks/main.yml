@@ -1,0 +1,14 @@
+---
+# tasks file for coredns
+
+- name: Preflight
+  ansible.builtin.include_tasks: preflight.yml
+
+- name: Install CoreDNS
+  ansible.builtin.include_tasks: install.yml
+
+- name: Config CoreDNS
+  ansible.builtin.include_tasks: config.yml
+
+- name: Disable systemd-resolved
+  ansible.builtin.include_tasks: disable-resolved.yml

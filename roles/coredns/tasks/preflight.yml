@@ -1,0 +1,6 @@
+---
+- name: Get checksum for architecture {{ coredns_go_arch }}
+  ansible.builtin.set_fact:
+    coredns_checksum: "{{ lookup('url', 'https://github.com/coredns/coredns/releases/download/v'
+      + coredns_version + '/' + coredns_download_filename + '.tgz.sha256').split(' ')[0] }}"
+  run_once: true
