@@ -1,0 +1,12 @@
+---
+pppoe_source_interface: "ens18"
+pppoe_interface_name: "pppoe0"
+pppoe_debug: false
+pppoe_mtu: 1492
+pppoe_mru: "{{ pppoe_mtu }}"
+pppoe_use_ipv6: false
+
+pppoe_service_name: "{{ pppoe_interface_name }}"
+
+pppoe_username: ""
+pppoe_password: ""

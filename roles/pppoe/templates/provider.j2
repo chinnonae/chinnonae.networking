@@ -1,0 +1,97 @@
+# Require peer to provide the local IP address if it is not
+# specified explicitly in the config file.
+noipdefault
+
+# Don't show the password in logfiles:
+hide-password
+
+# Standard Link Control Protocol (LCP) parameters:
+lcp-echo-interval 20
+lcp-echo-failure 3
+
+# RFC 2516, paragraph 7 mandates that the following options MUST NOT be
+# requested and MUST be rejected if requested by the peer:
+# Address-and-Control-Field-Compression (ACFC)
+noaccomp
+
+# Asynchronous-Control-Character-Map (ACCM)
+default-asyncmap
+
+# Override any connect script that may have been set in /etc/ppp/options.
+connect /bin/true
+
+# Don't try to authenticate the remote node
+noauth
+
+# Don't try to proxy ARP for the remote endpoint. User can set proxy
+# arp entries up manually if they wish.  More importantly, having
+# the "proxyarp" parameter set disables the "defaultroute" option.
+noproxyarp
+
+# Unlimited connection attempts
+maxfail 0
+
+plugin rp-pppoe.so {{ pppoe_source_interface }}
+
+# Do not exit after a connection is terminated; instead try to reopen
+# the connection. The maxfail option still has an effect on persistent
+# connections.
+persist
+
+# Set the ppp interface name for outbound connections. If the interface
+# name is already in use, or if the name cannot be used for any 
+# other reason, pppd will terminate.
+ifname {{ pppoe_interface_name }}
+
+# Provides an extra parameter to the ip-up, ip-pre-up and ip-down scripts.
+# If this option is given, the string supplied is given as the 6th 
+# parameter to those scripts.
+ipparam {{ pppoe_interface_name }}
+
+# Enables connection debugging facilities. If this option is given,
+# pppd will log the contents of all control packets sent or received
+# in a readable form. The packets are logged through syslog with facility
+# daemon and level debug. This information can be directed to a file by
+# setting up /etc/syslog.conf appropriately (see syslog.conf(5)).
+{% if pppoe_debug %}
+debug
+{% else %}
+# debug
+{% endif %}
+
+# Set the MTU [Maximum Transmit Unit] value to n. Unless the peer requests
+# a smaller value via MRU negotiation, pppd will request that the kernel
+# networking code send data packets of no more than n bytes through the
+# PPP network interface. Note that for the IPv6 protocol, the MTU 
+# must be at least 1280.
+mtu {{ pppoe_mtu }}
+
+# Set the MRU [Maximum Receive Unit] value to n. Pppd will ask the peer
+# to send packets of no more than n bytes. The value of n must be 
+# between 128 and 16384; the default is 1500. A value of 296 works well
+# on very slow links (40 bytes for TCP/IP header + 256 bytes of data).
+# Note that for the IPv6 protocol, the MRU must be at least 1280.
+mru {{ pppoe_mru }}
+
+# Sets the name used for authenticating the local system to the peer to name.
+user "{{ pppoe_username }}"
+
+# Add a default route to the system routing tables, using the peer
+# as the gateway, when IPCP negotiation is successfully completed.
+# This entry is removed when the PPP connection is broken.
+# This option is privileged if the nodefaultroute option has been specified.
+defaultroute
+
+# Disable IPv6CP negotiation and IPv6 communication. This option should
+# only be required if the peer is buggy and gets confused by requests
+# from pppd for IPv6CP negotiation.
+{% if pppoe_use_ipv6 %}
+# noipv6
+{% else %}
+noipv6
+{% endif %}
+
+# Don't detach from the controlling terminal. Without this option,
+# if a serial device other than the terminal on the standard input is specified,
+# pppd will fork to become a background process.
+nodetach
