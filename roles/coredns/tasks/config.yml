@@ -22,6 +22,7 @@
         update: true
         version: main
         accept_hostkey: true
+      notify: Restart coredns
     - name: Check if coredns directory exists
       ansible.builtin.stat:
         path: /etc/coredns
