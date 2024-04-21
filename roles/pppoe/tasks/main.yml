@@ -9,6 +9,9 @@
     path: /etc/ppp/chap-secrets
     line: '"{{ pppoe_username }}" * "{{ pppoe_password }}"'
     state: present
+  loop:
+    - /etc/ppp/chap-secrets
+    - /etc/ppp/pap-secrets
 
 - name: Copy pppoe setting
   ansible.builtin.template:
