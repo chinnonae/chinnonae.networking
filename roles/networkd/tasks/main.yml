@@ -5,6 +5,11 @@
     dest: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
     mode: '0644'
 
+- name: Ensure netplan is removed
+  ansible.builtin.apt:
+    name: netplan.io
+    state: absent
+
 - name: Configure networkd interfaces
   ansible.builtin.include_tasks: config.yml
   loop: "{{ networkd_interfaces }}"
