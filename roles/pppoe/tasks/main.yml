@@ -6,7 +6,7 @@
 
 - name: Add username and password to chap-secret
   ansible.builtin.lineinfile:
-    path: /etc/ppp/chap-secrets
+    path: "{{ item }}"
     line: '"{{ pppoe_username }}" * "{{ pppoe_password }}"'
     state: present
   loop:
