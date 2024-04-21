@@ -15,16 +15,10 @@
       ansible.builtin.apt:
         name: git
         state: present
-    - name: Copy key
-      ansible.builtin.copy:
-        dest: ~/.ssh/coredns
-        content: "{{ coredns_repository_key }}"
-        mode: '0600'
     - name: Clone repository
       ansible.builtin.git:
         repo: "{{ coredns_config_repository }}"
         dest: /opt/coredns-config
-        key_file: ~/.ssh/coredns
         update: true
         version: main
         accept_hostkey: true
