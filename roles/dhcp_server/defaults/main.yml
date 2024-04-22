@@ -1,0 +1,21 @@
+---
+# defaults file for dhcp_server
+dhcp_server_default_lease_time: 600
+dhcp_server_max_lease_time: 7200
+
+dhcp_server_interfacesv4: []
+dhcp_server_interfacesv6: []
+
+dhcp_server_subnets: []
+  # - address: 192.168.1.0
+  #   netmask: 255.255.255.0
+  #   range_start: 192.168.1.101
+  #   range_end: 192.168.1.199
+  #   gateway: 192.168.1.1
+  #   dns_servers: [192.168.1.1]
+  #   dns_domain: example.org
+
+dhcp_server_reservations: []
+  # - hostname: example
+  #   mac_address: "MA:CA:DR:ES:S0:00"
+  #   ip_address: 192.168.1.5

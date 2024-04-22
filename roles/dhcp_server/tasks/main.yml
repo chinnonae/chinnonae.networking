@@ -1,0 +1,26 @@
+---
+- name: Ensure dhcp-server is installed
+  ansible.builtin.apt:
+    name: isc-dhcp-server
+    state: present
+
+- name: Configure v4 interfaces
+  ansible.builtin.lineinfile:
+    path: /etc/default/isc-dhcp-server
+    line: 'INTERFACESv4="{{ dhcp_server_interfacesv4 | join(" ") }}"'
+    regexp: "INTERFACESv4="
+  notify: Restart dhcp-server
+
+- name: Configure v6 interfaces
+  ansible.builtin.lineinfile:
+    path: /etc/default/isc-dhcp-server
+    line: 'INTERFACESv6="{{ dhcp_server_interfacesv6 | join(" ") }}"'
+    regexp: "INTERFACESv6="
+  notify: Restart dhcp-server
+
+- name: Configure dhcp-server
+  ansible.builtin.template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    mode: '0644'
+  notify: Restart dhcp-server

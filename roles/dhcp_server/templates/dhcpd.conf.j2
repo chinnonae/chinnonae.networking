@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+default-lease-time {{ dhcp_server_default_lease_time }};
+max-lease-time {{ dhcp_server_max_lease_time}};
+authoritative;
+
+{% for subnet in dhcp_server_subnets %}
+subnet {{ subnet.address }} netmask {{ subnet.netmask }} {
+  range {{ subnet.range_start }} {{ subnet.range_end }};
+  option subnet-mask {{ subnet.netmask }};
+  option routers {{ subnet.gateway }};
+  option domain-name-servers {{ subnet.dns_servers | join(", ")}};
+}
+{% endfor %}
+
+{% for reservation in dhcp_server_reservations %}
+host {{ reservation.hostname }} {
+  hardware ethernet {{ reservation.mac_address }};
+  fixed-address {{ reservation.ip_address }};
+}
+{% endfor %}
