@@ -1,0 +1,30 @@
+---
+- name: Check if token is provided
+  ansible.builtin.assert:
+    that: token is defined
+    msg: cloudflared token is not provided in variable "token"
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Install cloudflared
+  when: "'cloudflared' is not in ansible_facts.packages"
+  block:
+    - name: Download cloudflared package
+      ansible.builtin.get_url:
+        url: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+        dest: /tmp/cloudflared-linux-amd64.deb
+        mode: "0644"
+    - name: Install cloudflared package
+      ansible.builtin.apt:
+        deb: /tmp/cloudflared-linux-amd64.deb
+    - name: Run cloudflared install
+      ansible.builtin.command: cloudflared service install {{ cloudflared_token }}
+    - name: Ensure the tunnel is running
+      ansible.builtin.systemd:
+        name: cloudflared
+        state: started
+        enabled: true
+        masked: false
+ 
