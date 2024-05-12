@@ -12,3 +12,9 @@ Address={{ ip }}
 VLAN={{ device_name }}.{{ vlan.id }}
 {% endfor %}
 {% endif %}
+
+{% for route in routes %}
+[Route]
+Gateway={{route['gateway']}}
+Destination={{route['destination']}}
+{% endfor %}

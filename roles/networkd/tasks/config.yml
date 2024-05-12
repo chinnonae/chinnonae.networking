@@ -8,6 +8,7 @@
     device_name: "{{ interface.device_name }}"
     vlans: "{{ interface.vlans }}"
     ip: "{{ interface.ip }}"
+    routes: "{{ interface.routes | default([])}}"
 
 - name: Setup vlan network devices
   ansible.builtin.include_tasks: config/vlan.yml

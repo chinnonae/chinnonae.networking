@@ -7,6 +7,7 @@
     device_name: "{{ interface.device_name }}.{{ vlan.id }}"
     id: "{{ vlan.id }}"
     ip: "{{ vlan.ip }}"
+    routes: "{{ vlan.routes | default([]) }}"
 
 - name: Copy vlan network
   ansible.builtin.template:
