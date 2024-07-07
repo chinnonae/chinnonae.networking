@@ -14,7 +14,7 @@ PrivateKey={{ networkd_wg_private_key }}
 # Peer: {{ peer.hostname }}
 PublicKey={{ peer.public_key }}
 {% for ips in peer.allowed_ips %}
-AllowedIPS={{ ips }}
+AllowedIPs={{ ips }}
 {% endfor %}
 {% if peer.port %}
 Endpoint={{ peer.hostname }}:{{ peer.port }}
