@@ -4,14 +4,19 @@ Kind=wireguard
 Description=Wireguard Mesh
 
 [WireGuard]
-{% if listen_port is defined %}
-ListenPort={{ listen_port }}
+{% if networkd_wg_listen_port is defined %}
+ListenPort={{ networkd_wg_listen_port }}
+{% endif %}
 PrivateKey={{ private_key }}
 
 {% for peer in peers %}
 [WireGuardPeer]
+# Peer: {{ peer.hostname }}
 PublicKey={{ peer.public_key }}
 {% for ips in peer.allowed_ips %}
 AllowedIPS={{ ips }}
 {% endfor %}
+{% if peer.listen_port is defined %}
+Endpoint={{ peer.hostname }}:{{ peer.listen_port }}
+{% endif %}
 {% endfor %}
