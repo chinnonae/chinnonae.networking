@@ -10,7 +10,7 @@
     mode: '0644'
     owner: root
     group: root
-  notify: Reload systemd-networkd
+  notify: Reload wireguard interface
 
 - name: Copy wireguard network
   ansible.builtin.template:
@@ -19,4 +19,4 @@
     mode: '0644'
     owner: root
     group: root
-  notify: Reload systemd-networkd
+  notify: Reload wireguard interface

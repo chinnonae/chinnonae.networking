@@ -1,6 +1,4 @@
 ---
-# handlers file for networkd-wg
-- name: Reload systemd-networkd
-  ansible.builtin.service:
-    name: systemd-networkd
-    state: reloaded
+- name: Reload wireguard interface
+  ansible.builtin.command:
+    cmd: "ip l d {{ networkd_wg_ifname }}; networkctl reload"
