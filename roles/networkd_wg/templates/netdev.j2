@@ -16,7 +16,7 @@ PublicKey={{ peer.public_key }}
 {% for ips in peer.allowed_ips %}
 AllowedIPS={{ ips }}
 {% endfor %}
-{% if peer.listen_port is defined %}
-Endpoint={{ peer.hostname }}:{{ peer.listen_port }}
+{% if peer.port is defined %}
+Endpoint={{ peer.hostname }}:{{ peer.port }}
 {% endif %}
 {% endfor %}
