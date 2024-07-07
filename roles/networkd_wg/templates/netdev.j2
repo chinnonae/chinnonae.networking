@@ -7,7 +7,7 @@ Description=Wireguard Mesh
 {% if networkd_wg_listen_port is defined %}
 ListenPort={{ networkd_wg_listen_port }}
 {% endif %}
-PrivateKey={{ private_key }}
+PrivateKey={{ networkd_wg_private_key }}
 
 {% for peer in peers %}
 [WireGuardPeer]
