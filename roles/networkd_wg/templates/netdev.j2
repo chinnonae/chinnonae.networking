@@ -8,8 +8,8 @@ Description=Wireguard Mesh
 ListenPort={{ networkd_wg_listen_port }}
 {% endif %}
 PrivateKey={{ networkd_wg_private_key }}
-
 {% for peer in peers %}
+
 [WireGuardPeer]
 # Peer: {{ peer.hostname }}
 PublicKey={{ peer.public_key }}
@@ -18,5 +18,6 @@ AllowedIPs={{ ips }}
 {% endfor %}
 {% if peer.port %}
 Endpoint={{ peer.hostname }}:{{ peer.port }}
+PersistentKeepalive=30
 {% endif %}
 {% endfor %}
