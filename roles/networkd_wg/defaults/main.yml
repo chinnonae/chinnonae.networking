@@ -1,0 +1,3 @@
+---
+networkd_wg_ifname: "wg0"
+networkd_wg_ifaddr: "10.0.0.1/24"

@@ -1,0 +1,6 @@
+---
+# handlers file for networkd-wg
+- name: Reload systemd-networkd
+  ansible.builtin.service:
+    name: systemd-networkd
+    state: reloaded

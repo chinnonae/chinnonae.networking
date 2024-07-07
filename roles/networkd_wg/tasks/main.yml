@@ -1,0 +1,22 @@
+---
+- name: Ensure wireguard-tools is installed
+  ansible.builtin.apt:
+    name: wireguard-tools
+
+- name: Copy wireguard netdev
+  ansible.builtin.template:
+    src: netdev.j2
+    dest: "/etc/systemd/network/90-{{ networkd_wg_ifname }}.netdev"
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Reload systemd-networkd
+
+- name: Copy wireguard network
+  ansible.builtin.template:
+    src: network.j2
+    dest: "/etc/systemd/network/90-{{ networkd_wg_ifname }}.network"
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Reload systemd-networkd
