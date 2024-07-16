@@ -1,0 +1,42 @@
+---
+- name: Ensure zone exists
+  ansible.posix.firewalld:
+    zone: "{{ zone.key }}"
+    state: present
+    permanent: true
+
+- name: Set zone masquerade
+  ansible.posix.firewalld:
+    zone: "{{ zone.key }}"
+    masquerade: "{{ zone.value.masquerade }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  when: zone.value.masquerade is defined
+
+- name: Ensure interfaces in zone
+  ansible.posix.firewalld:
+    zone: "{{ zone.key }}"
+    interface: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  loop: "{{ zone.value.interfaces | default([]) }}"
+
+- name: Ensure sources in zone
+  ansible.posix.firewalld:
+    zone: "{{ zone.key }}"
+    source: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  loop: "{{ zone.value.sources | default([]) }}"
+
+- name: Ensure rich rules in zone
+  ansible.posix.firewalld:
+    zone: "{{ zone.key }}"
+    rich_rule: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  loop: "{{ zone.value.rich_rules | default([]) }}"

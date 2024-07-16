@@ -1,0 +1,10 @@
+---
+firewalld_zones: {}
+  # external:
+  #   masquerade: true
+  #   interfaces:
+  #     - pppoe0
+  #   rich_rules:
+  #     - rule tcp-mss-clamp value="pmtu"
+
+firewalld_direct_rules: []
