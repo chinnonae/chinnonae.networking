@@ -1,4 +1,4 @@
 ---
 - name: Reload wireguard interface
   ansible.builtin.command:
-    cmd: "ip l d {{ networkd_wg_ifname }}; networkctl reload"
+    cmd: "networkctl reload"

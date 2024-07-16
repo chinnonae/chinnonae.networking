@@ -1,0 +1,19 @@
+---
+- name: Configure wireguard mesh
+  hosts: "{{ hostname }}"
+  tasks:
+    - name: Set peer names fact
+      ansible.builtin.set_fact:
+        _peer_names: "{{ groups['wireguard'] | difference([inventory_hostname]) }}"
+    - name: Set peers
+      ansible.builtin.set_fact:
+        peers: "{{ _peer_names | map('extract', hostvars) | list
+            | json_query('[].{
+                hostname: inventory_hostname,
+                port: networkd_wg_listen_port,
+                public_key: networkd_wg_public_key,
+                allowed_ips: networkd_wg_allowed_ips }')
+          }}"
+    - name: Run wireguard role
+      ansible.builtin.include_role:
+        name: networkd_wg
